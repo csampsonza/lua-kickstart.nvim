@@ -46,6 +46,25 @@ local plugins = {
       require("better_escape").setup()
     end,
   },
+  {
+    "alexghergh/nvim-tmux-navigation",
+    event = "VeryLazy",
+    config = function()
+      local nvim_tmux_nav = require("nvim-tmux-navigation")
+      nvim_tmux_nav.setup({
+        keybindings = {
+          left = "<C-h>",
+          down = "<C-j>",
+          up = "<C-k>",
+          right = "<C-l>",
+          last_active = "<C-\\>",
+          next = "<C-space>"
+        }
+      })
+    end,
+
+  
+  },
 
   -- To make a plugin not be loaded
   -- {
