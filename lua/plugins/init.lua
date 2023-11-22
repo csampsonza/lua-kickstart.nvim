@@ -3,7 +3,7 @@
 local default_plugins = {
 
   "nvim-lua/plenary.nvim",
-
+  
   {
     "NvChad/base46",
     branch = "v2.0",
@@ -47,6 +47,10 @@ local default_plugins = {
   {
     "tpope/vim-fugitive",
     lazy = false,
+    config = function()
+      return require("plugins.configs.others").fugitive
+    end,
+
   },
 
   {
