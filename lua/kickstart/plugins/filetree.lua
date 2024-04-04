@@ -10,7 +10,7 @@ return {
   },
   keys = {
     { -- lazy style key map
-      '<leader>n',
+      '<leader>e',
       '<cmd>Neotree<cr>',
       desc = 'filetree browser',
     },

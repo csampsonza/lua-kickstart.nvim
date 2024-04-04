@@ -834,6 +834,7 @@ require('lazy').setup({
   require 'kickstart.plugins.telescope-undo',
   require 'kickstart.plugins.filetree',
   require 'kickstart.plugins.git-nvim',
+  require 'kickstart.plugins.diffview',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
