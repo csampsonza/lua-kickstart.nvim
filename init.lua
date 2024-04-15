@@ -540,8 +540,8 @@ require('lazy').setup({
       local servers = {
         clangd = {},
         -- gopls = {},
-        -- pyright = {},
-        -- rust_analyzer = {},
+        pyright = {},
+        rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -834,8 +834,10 @@ require('lazy').setup({
   require 'kickstart.plugins.telescope-undo',
   require 'kickstart.plugins.filetree',
   require 'kickstart.plugins.git-nvim',
-  require 'kickstart.plugins.diffview',
+  -- require 'kickstart.plugins.diffview',
   require 'kickstart.plugins.highlight-colors',
+  require 'kickstart.plugins.tmux-nav',
+  require 'kickstart.plugins.nvim-autopairs',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
