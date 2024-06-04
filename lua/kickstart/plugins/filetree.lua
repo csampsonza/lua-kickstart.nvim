@@ -11,11 +11,11 @@ return {
   keys = {
     { -- lazy style key map
       '<leader>e',
-      '<cmd>Neotree<cr>',
+      '<cmd>Neotree reveal_force_cwd<cr>',
       desc = 'filetree browser',
     },
   },
   config = function()
-    require('neo-tree').setup {}
+    require('neo-tree').setup({})
   end,
 }

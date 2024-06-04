@@ -17,17 +17,23 @@ return {
     -- don't use `defaults = { }` here, do this in the main telescope spec
     extensions = {
       undo = {
-        -- telescope-undo.nvim config, see below
         side_by_side = true,
-        layout_strategy = 'bottom_pane',
+        layout_strategy = 'vertical',
         layout_config = {
-          bottom_pane = {
-            height = 137,
-            preview_width = 100,
-            preview_cutoff = 100,
-            prompt_position = 'top',
-          },
+          preview_height = 0.7,
         },
+
+        -- -- telescope-undo.nvim config, see below
+        -- side_by_side = true,
+        -- layout_strategy = 'bottom_pane',
+        -- layout_config = {
+        --   bottom_pane = {
+        --     height = 137,
+        --     preview_width = 100,
+        --     preview_cutoff = 100,
+        --     prompt_position = 'top',
+        --   },
+        -- },
       },
       -- no other extensions here, they can have their own spec too
     },
@@ -37,6 +43,6 @@ return {
     -- configs for us. We won't use data, as everything is in it's own namespace (telescope
     -- defaults, as well as each extension).
     require('telescope').setup(opts)
-    require('telescope').load_extension 'undo'
+    require('telescope').load_extension('undo')
   end,
 }

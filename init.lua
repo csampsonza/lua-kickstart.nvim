@@ -102,7 +102,7 @@ vim.g.have_nerd_font = true
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -153,6 +153,11 @@ vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
+
+-- Doees spellling faill color or colour are both good
+-- vim.opt.invspell = true
+vim.opt.spelllang = 'en'
+vim.opt.spell = true
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -336,11 +341,11 @@ require('lazy').setup({
 
       -- Document existing key chains
       require('which-key').register({
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+        ['<leader>wc'] = { name = '[C]ode', _ = 'which_key_ignore' },
+        ['<leader>wd'] = { name = '[D]ocument', _ = 'which_key_ignore' },
+        ['<leader>wr'] = { name = '[R]ename', _ = 'which_key_ignore' },
+        ['<leader>ws'] = { name = '[S]earch', _ = 'which_key_ignore' },
+        ['<leader>ww'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
       })
     end,
   },
@@ -640,6 +645,8 @@ require('lazy').setup({
           --  For example, in C this would take you to the header.
           map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
+          map('<leader>f', vim.lsp.buf.format, 'Format the buffer')
+
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
@@ -696,6 +703,13 @@ require('lazy').setup({
         -- But for many setups, the LSP (`tsserver`) will work just fine
         tsserver = {},
         --
+        yamlls = {
+          settings = {
+            yaml = {
+              customTags = { '!Ref', '!Sub', '!GetAtt' },
+            },
+          },
+        },
 
         lua_ls = {
           -- cmd = {...},
@@ -772,7 +786,7 @@ require('lazy').setup({
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        -- javascript = { { "prettierd", "prettier" } },
+        javascript = { { 'prettierd', 'prettier' } },
       },
     },
   },
@@ -1009,6 +1023,8 @@ require('lazy').setup({
   require('kickstart.plugins.nvim-autopairs'),
   require('kickstart.plugins.bufferline'),
   require('kickstart.plugins.local-neoformat'),
+  require('kickstart.plugins.yanky'),
+  require('kickstart.plugins.trouble'),
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
