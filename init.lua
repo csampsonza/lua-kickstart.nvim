@@ -169,12 +169,6 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic keymaps
 vim.keymap.set(
   'n',
-  '[d',
-  vim.diagnostic.goto_prev,
-  { desc = 'Go to previous [D]iagnostic message' }
-)
-vim.keymap.set(
-  'n',
   ']d',
   vim.diagnostic.goto_next,
   { desc = 'Go to next [D]iagnostic message' }
@@ -670,7 +664,7 @@ require('lazy').setup({
       })
 
       -- LSP servers and clients are able to communicate to each other what features they support.
-      --  By default, Neovim doesn't support everything that is in the LSP specification.
+      --  By default, Neovim doesn't support everything that is in the LSP specification.nvim-lsp
       --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
       --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
       local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -701,7 +695,12 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {},
+        tsserver = {
+          completions = {
+            disableSuggestions = true,
+            completeFunctionCalls = true,
+          },
+        },
         --
         yamlls = {
           settings = {
@@ -1009,7 +1008,7 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
+  require('kickstart.plugins.debug'),
   require('kickstart.plugins.indent_line'),
   -- require 'kickstart.plugins.lint',
   require('kickstart.plugins.rose-pine'),
