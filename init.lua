@@ -162,6 +162,42 @@ vim.opt.scrolloff = 10
 vim.opt.spelllang = 'en'
 vim.opt.spell = true
 
+vim.cmd('let g:netrw_liststyle = 3')
+
+local opt = vim.opt
+
+opt.relativenumber = true
+opt.number = true
+
+-- tabs & indentation
+opt.tabstop = 2 -- 2 spaces for tabs (prettier default)
+opt.shiftwidth = 2 -- 2 spaces for indent width
+opt.expandtab = true -- expand tab to spaces
+opt.autoindent = true -- copy indent from current line when starting new one
+
+opt.wrap = false
+
+-- search settings
+opt.ignorecase = true -- ignore case when searching
+opt.smartcase = true -- if you include mixed case in your search, assumes you want case-sensitive
+
+opt.cursorline = true
+
+-- turn on termguicolors for tokyonight colorscheme to work
+-- (have to use iterm2 or any other true color terminal)
+opt.termguicolors = true
+opt.background = 'dark' -- colorschemes that can be light or dark will be made dark
+
+-- backspace
+opt.backspace = 'indent,eol,start' -- allow backspace on indent, end of line or insert mode start position
+
+-- split windows
+opt.splitright = true -- split vertical window to the right
+opt.splitbelow = true -- split horizontal window to the bottom
+
+-- turn off swapfile
+opt.swapfile = false
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -170,8 +206,73 @@ vim.opt.spell = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set(
+  'n',
+  '<leader>q',
+  vim.diagnostic.setloclist,
+  { desc = 'Open diagnostic [Q]uickfix list' }
+)
 
+-- Remap 'x' to delete a character without affecting the regiser
+vim.api.nvim_set_keymap('n', 'x', '"_x', { noremap = true, silent = true })
+
+-- Remap 'd' to use the black hole register for deletion
+-- vim.api.nvim_set_keymap('n', 'd', '"_d', { noremap = true, silent = true })
+
+vim.g.mapleader = ' '
+
+local keymap = vim.keymap -- for conciseness
+
+keymap.set('i', 'jk', '<ESC>', { desc = 'Exit insert mode with jk' })
+
+keymap.set('n', '<leader>nh', ':nohl<CR>', { desc = 'Clear search highlights' })
+
+-- increment/decrement numbers
+keymap.set('n', '<leader>+', '<C-a>', { desc = 'Increment number' }) -- increment
+keymap.set('n', '<leader>-', '<C-x>', { desc = 'Decrement number' }) -- decrement
+
+-- window management
+keymap.set('n', '<leader>s|', '<C-w>v', { desc = 'Split window vertically' }) -- split window vertically
+keymap.set('n', '<leader>s-', '<C-w>s', { desc = 'Split window horizontally' }) -- split window horizontally
+keymap.set('n', '<leader>se', '<C-w>=', { desc = 'Make splits equal size' }) -- make split windows equal width & height
+keymap.set(
+  'n',
+  '<leader>sx',
+  '<cmd>close<CR>',
+  { desc = 'Close current split' }
+) -- close current split window
+
+keymap.set('n', '<leader>to', '<cmd>tabnew<CR>', { desc = 'Open new tab' }) -- open new tab
+keymap.set(
+  'n',
+  '<leader>tx',
+  '<cmd>tabclose<CR>',
+  { desc = 'Close current tab' }
+) -- close current tab
+keymap.set('n', '<leader>tn', '<cmd>tabn<CR>', { desc = 'Go to next tab' }) --  go to next tab
+keymap.set('n', '<leader>tp', '<cmd>tabp<CR>', { desc = 'Go to previous tab' }) --  go to previous tab
+keymap.set(
+  'n',
+  '<leader>tf',
+  '<cmd>tabnew %<CR>',
+  { desc = 'Open current buffer in new tab' }
+) --  move current buffer to new tab
+
+-- Navigate to the previous quicklist item
+keymap.set(
+  'n',
+  '<leader>[',
+  ':cprev<CR>',
+  { desc = 'Navigate to the prev quicklist item' }
+)
+
+-- Navigate to the next quicklist item
+keymap.set(
+  'n',
+  '<leader>]',
+  ':cnext<CR>',
+  { desc = 'Navigate to the next quicklist item' }
+)
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -239,10 +340,17 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
-local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
+local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
-  local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
+  local out = vim.fn.system({
+    'git',
+    'clone',
+    '--filter=blob:none',
+    '--branch=stable',
+    lazyrepo,
+    lazypath,
+  })
   if vim.v.shell_error ~= 0 then
     error('Error cloning lazy.nvim:\n' .. out)
   end
@@ -415,11 +523,18 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
+        defaults = {
+          path_display = 'smart',
+          mappings = {
+            i = {
+              -- ['<C-k>'] = actions.move_selection_previous, -- move to prev result
+              -- ['<C-j>'] = actions.move_selection_next, -- move to next result
+              -- ['<C-q>'] = actions.send_selected_to_qflist + custom_actions.open_trouble_qflist,
+              -- ['<C-t>'] = trouble_telescope.open,
+              ['<c-enter>'] = 'to_fuzzy_refine',
+            },
+          },
+        },
         -- pickers = {}
         extensions = {
           ['ui-select'] = {
@@ -595,7 +710,12 @@ require('lazy').setup({
           -- for LSP related items. It sets the mode, buffer and description for us each time.
           local map = function(keys, func, desc, mode)
             mode = mode or 'n'
-            vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+            vim.keymap.set(
+              mode,
+              keys,
+              func,
+              { buffer = event.buf, desc = 'LSP: ' .. desc }
+            )
           end
 
           -- Jump to the definition of the word under your cursor.
@@ -653,7 +773,12 @@ require('lazy').setup({
 
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
-          map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
+          map(
+            '<leader>ca',
+            vim.lsp.buf.code_action,
+            '[C]ode [A]ction',
+            { 'n', 'x' }
+          )
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
@@ -667,8 +792,16 @@ require('lazy').setup({
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
-          if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
-            local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+          if
+            client
+            and client.supports_method(
+              vim.lsp.protocol.Methods.textDocument_documentHighlight
+            )
+          then
+            local highlight_augroup = vim.api.nvim_create_augroup(
+              'kickstart-lsp-highlight',
+              { clear = false }
+            )
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
               group = highlight_augroup,
@@ -682,10 +815,16 @@ require('lazy').setup({
             })
 
             vim.api.nvim_create_autocmd('LspDetach', {
-              group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
+              group = vim.api.nvim_create_augroup(
+                'kickstart-lsp-detach',
+                { clear = true }
+              ),
               callback = function(event2)
                 vim.lsp.buf.clear_references()
-                vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+                vim.api.nvim_clear_autocmds({
+                  group = 'kickstart-lsp-highlight',
+                  buffer = event2.buf,
+                })
               end,
             })
           end
@@ -694,9 +833,16 @@ require('lazy').setup({
           -- code, if the language server you are using supports them
           --
           -- This may be unwanted, since they displace some of your code
-          if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+          if
+            client
+            and client.supports_method(
+              vim.lsp.protocol.Methods.textDocument_inlayHint
+            )
+          then
             map('<leader>th', function()
-              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
+              vim.lsp.inlay_hint.enable(
+                not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf })
+              )
             end, '[T]oggle Inlay [H]ints')
           end
         end,
@@ -734,12 +880,6 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {
-          completions = {
-            disableSuggestions = true,
-            completeFunctionCalls = true,
-          },
-        },
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
@@ -757,6 +897,13 @@ require('lazy').setup({
           -- capabilities = {},
           settings = {
             Lua = {
+              format = {
+                enable = true, -- Enable the formatter provided by lua_ls
+                defaultConfig = {
+                  indent_style = 'space', -- Use spaces instead of tabs
+                  indent_size = '2', -- Set the indent size to 4 spaces
+                },
+              },
               completion = {
                 callSnippet = 'Replace',
               },
@@ -786,13 +933,31 @@ require('lazy').setup({
       })
 
       require('mason-lspconfig').setup({
+        -- list of servers for mason to install
+        ensure_installed = {
+          'html',
+          'cssls',
+          'tailwindcss',
+          'svelte',
+          'lua_ls',
+          'graphql',
+          'emmet_ls',
+          'prismals',
+          'pyright',
+        },
+
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
             -- This handles overriding only values explicitly passed
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+            server.capabilities = vim.tbl_deep_extend(
+              'force',
+              {},
+              capabilities,
+              server.capabilities or {}
+            )
             require('lspconfig')[server_name].setup(server)
           end,
         },
@@ -808,7 +973,7 @@ require('lazy').setup({
       {
         '<leader>f',
         function()
-          require('conform').format { async = true, lsp_format = 'fallback' }
+          require('conform').format({ async = true, lsp_format = 'fallback' })
         end,
         mode = '',
         desc = '[F]ormat buffer',
@@ -838,7 +1003,7 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
@@ -967,6 +1132,14 @@ require('lazy').setup({
     'folke/tokyonight.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
+      -- require('tokyonight').setup({
+      --   transparent = true, -- Make the background transparent
+      --   styles = {
+      --     sidebars = 'transparent', -- Make sidebars transparent
+      --     floats = 'transparent', -- Make floating windows transparent
+      --   },
+      -- })
+
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
@@ -975,6 +1148,13 @@ require('lazy').setup({
       -- You can configure highlights by doing something like:
       vim.cmd.hi('Comment gui=none')
     end,
+    opts = {
+      transparent = true, -- Make the background transparent
+      styles = {
+        sidebars = 'transparent', -- Make sidebars transparent
+        floats = 'transparent', -- Make floating windows transparent
+      },
+    },
   },
 
   -- Highlight todo, notes, etc in comments
@@ -1028,7 +1208,19 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = {
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -1079,6 +1271,7 @@ require('lazy').setup({
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   -- { import = 'custom.plugins' },
+  -- require('custom.plugins'),
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the

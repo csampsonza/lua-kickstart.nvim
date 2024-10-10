@@ -8,9 +8,9 @@ return {
   },
   keys = {
     { -- lazy style key map
-      '<leader>u',
-      '<cmd>Telescope undo<cr>',
-      desc = 'undo history',
+      '<leader>su',
+      '<cmd>Seach Telescope undo<cr>',
+      desc = '[S]earch [u]ndo history',
     },
   },
   opts = {

@@ -35,9 +35,9 @@ return {
         end,
       },
       {
-        '<leader>fy',
+        '<leader>sy',
         '<cmd>Telescope yank_history theme=dropdown initial_mode=normal<cr>',
-        desc = 'Find Yank History',
+        desc = '[S]earch [Y]ank History',
       },
     },
     opts = {
